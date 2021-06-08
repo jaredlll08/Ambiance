@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "ambientenvironment",
+  "version": "${version}",
+  "name": "Ambient Environment",
+  "description": "Adds more ambiance to the game",
+  "authors": [
+    "Jaredlll08"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/ambient-environment",
+    "sources": "https://github.com/jaredlll08/Ambient-Environment",
+    "issues": "https://github.com/jaredlll08/Ambient-Environment/issues"
+  },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.blamejared.ambientenvironment.AmbientEnvironment"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.11",
+    "fabric": "*",
+    "minecraft": "1.17.x"
+  },
+  "custom": {
+    "modmenu:clientsideOnly": true
+  },
+  "mixins": [
+    {
+      "config": "ambientenvironment.client.json",
+      "environment": "client"
+    }
+  ]
+}

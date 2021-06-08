@@ -1,75 +1,34 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = 'https://maven.blamejared.com' }
+        maven {
+            name = "BlameJared"
+            url = 'https://maven.blamejared.com'
+        }
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.+', changing: true
     }
 }
-plugins {
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-}
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'com.blamejared.modtemplate'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 
-version = '5.0.0'
+plugins {
+    id "fabric-loom" version "0.8-SNAPSHOT"
+    id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "maven-publish"
+}
+apply plugin: 'com.blamejared.modtemplate'
+
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
+
+version = 'fabric-1.17-rc2-6.0.0'
 group = 'com.blamejared.ambientenvironment'
 archivesBaseName = 'AmbientEnvironment'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
-minecraft {
-    mappings channel: 'official', version: '1.16.5'
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            taskName 'AmbientEnvironmentClient'
-            mods {
-                ambientenvironment {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            taskName 'AmbientEnvironmentServer'
-            mods {
-                ambientenvironment {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            taskName 'AmbientEnvironmentData'
-            args '--mod', 'ambientenvironment', '--all', '--output', file('src/generated/resources/')
-
-            mods {
-                ambientenvironment {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
 modTemplate {
-    mcVersion "1.16.5"
+    mcVersion "1.17"
     curseHomepage "https://www.curseforge.com/minecraft/mc-mods/ambient-environment"
-    displayName "AmbientEnvironment"
+    displayName "AmbientEnvironment Fabric"
 
     changelog {
         enabled true
@@ -77,9 +36,7 @@ modTemplate {
         repo "https://github.com/jaredlll08/Ambient-Environment"
     }
     versionTracker {
-        enabled true
-        author "Jared"
-        projectName "AmbientEnvironment"
+        enabled false
     }
     webhook {
         enabled true
@@ -89,106 +46,79 @@ modTemplate {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.13'
+    minecraft "com.mojang:minecraft:1.17-rc2"
+    mappings minecraft.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:0.11.3"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.34.9+1.17"
 }
 
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "ambientenvironment",
-                "Specification-Vendor"    : "Jaredlll08",
-                "Specification-Version"   : "1", // We are version 1 of ourselves
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : "${version}",
-                "Implementation-Vendor"   : "Jaredlll08",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+processResources {
+
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+
+        expand "version": project.version
     }
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    description = 'Creates a JAR containing the source code.'
-    from sourceSets.main.allSource
-    classifier = 'sources'
+tasks.withType(JavaCompile) {
+
+    it.options.encoding = 'UTF-8'
+    it.options.release = 16
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    description = 'Creates a JAR containing the JavaDocs.'
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
-
-task deobfJar(type: Jar) {
-    description = 'Creates a JAR containing the non-obfuscated compiled code.'
-    from sourceSets.main.output
-    classifier = "deobf"
-}
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-    archives deobfJar
+java {
+    withSourcesJar()
 }
 
 publish.dependsOn(project.tasks.getByName("assemble"))
 publish.mustRunAfter(project.tasks.getByName("build"))
 
 publishing {
-
     publications {
-
         mavenJava(MavenPublication) {
-
-            groupId project.group
-            artifactId project.archivesBaseName
-            version project.version
-            from components.java
-
-            // Allows the maven pom file to be modified.
-            pom.withXml {
-
-                // Go through all the dependencies.
-                asNode().dependencies.dependency.each { dep ->
-
-                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
-                    assert dep.parent().remove(dep)
-                }
+            artifact(remapJar) {
+                builtBy remapJar
             }
-
-            artifact sourcesJar {
-
-                classifier 'sources'
-            }
-            artifact javadocJar {
-
-                classifier 'javadoc'
-            }
-            artifact deobfJar {
-
-                classifier 'deobf'
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
             }
         }
     }
-
     repositories {
-
         maven {
-
-            url "file://" + System.getenv("local_maven")
+            // Sets the maven URL
+            url findProperty('local_maven')
         }
     }
 }
 
+
 curseforge {
 
     apiKey = findProperty('curseforge_api_token') ?: 0
+    def versions = ["1.17", "1.17-Snapshot"]
+
     project {
         id = "320163"
         releaseType = 'release'
         changelog = file("changelog.md")
         changelogType = 'markdown'
+        addGameVersion "Fabric"
 
-//        addArtifact(sourcesJar)
-//        addArtifact(javadocJar)
-        addArtifact(deobfJar)
+        versions.each {
+
+            addGameVersion "${it}"
+        }
+
+        mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+
+        afterEvaluate {
+            uploadTask.dependsOn(remapJar)
+        }
+    }
+    options {
+        forgeGradleIntegration = false;
     }
 }

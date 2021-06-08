@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.blamejared.ambientenvironment.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "BiomeColorsAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
