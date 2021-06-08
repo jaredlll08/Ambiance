@@ -21,7 +21,7 @@ apply plugin: 'com.blamejared.modtemplate'
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
-version = 'fabric-1.17-rc2-6.0.0' + getBuildNumber()
+version = 'fabric-1.17-rc2-6.0.0' + ".${getBuildNumber()}"
 group = 'com.blamejared.ambientenvironment'
 archivesBaseName = 'AmbientEnvironment'
 
