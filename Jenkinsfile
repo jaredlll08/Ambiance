@@ -11,7 +11,7 @@ pipeline {
                 withCredentials([file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile')]) {
                     echo 'Cleaning Project'
                     sh 'chmod +x gradlew'
-                    sh './gradlew clean build genGitChangelog publish curseforge'
+                    sh './gradlew clean build publish curseforge'
                 }
             }
         }
@@ -19,7 +19,6 @@ pipeline {
     post {
         always {
             archive 'build/libs/**.jar'
-            archive 'changelog.md'
         }
     }
 }
