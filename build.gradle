@@ -32,7 +32,7 @@ modTemplate {
 
     changelog {
         enabled true
-        firstCommit "9831ec8676cccc814935cb3192cc4250aa6d3cd7"
+        firstCommit "d45e9b2ec81cd76424d53e164a9bd9f1293ff554"
         repo "https://github.com/jaredlll08/Ambient-Environment"
     }
     versionTracker {
