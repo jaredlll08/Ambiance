@@ -72,9 +72,6 @@ java {
     withSourcesJar()
 }
 
-publish.dependsOn(project.tasks.getByName("assemble"))
-publish.mustRunAfter(project.tasks.getByName("build"))
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
