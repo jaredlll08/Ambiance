@@ -6,9 +6,9 @@ buildscript {
         }
         mavenCentral()
     }
-    dependencies {
-        classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.+', changing: true
-    }
+//    dependencies {
+//        classpath group: 'com.blamejared', name: 'ModTemplate', version: '1.+', changing: true
+//    }
 }
 
 plugins {
@@ -16,7 +16,7 @@ plugins {
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "maven-publish"
 }
-apply plugin: 'com.blamejared.modtemplate'
+//apply plugin: 'com.blamejared.modtemplate'
 
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
@@ -25,25 +25,25 @@ version = 'fabric-1.17-rc2-6.0.0' + ".${getBuildNumber()}"
 group = 'com.blamejared.ambientenvironment'
 archivesBaseName = 'AmbientEnvironment'
 
-modTemplate {
-    mcVersion "1.17"
-    curseHomepage "https://www.curseforge.com/minecraft/mc-mods/ambient-environment"
-    displayName "AmbientEnvironment Fabric"
-
-    changelog {
-        enabled true
-        firstCommit "d45e9b2ec81cd76424d53e164a9bd9f1293ff554"
-        repo "https://github.com/jaredlll08/Ambient-Environment"
-    }
-    versionTracker {
-        enabled false
-    }
-    webhook {
-        enabled true
-        curseId "320163"
-        avatarUrl "https://media.forgecdn.net/avatars/201/25/636917476563554470.png"
-    }
-}
+//modTemplate {
+//    mcVersion "1.17"
+//    curseHomepage "https://www.curseforge.com/minecraft/mc-mods/ambient-environment"
+//    displayName "AmbientEnvironment Fabric"
+//
+//    changelog {
+//        enabled true
+//        firstCommit "d45e9b2ec81cd76424d53e164a9bd9f1293ff554"
+//        repo "https://github.com/jaredlll08/Ambient-Environment"
+//    }
+//    versionTracker {
+//        enabled false
+//    }
+//    webhook {
+//        enabled true
+//        curseId "320163"
+//        avatarUrl "https://media.forgecdn.net/avatars/201/25/636917476563554470.png"
+//    }
+//}
 
 dependencies {
     minecraft "com.mojang:minecraft:1.17-rc2"
@@ -100,7 +100,7 @@ curseforge {
     project {
         id = "320163"
         releaseType = 'release'
-        changelog = file("changelog.md")
+        changelog = "Port to Fabric"
         changelogType = 'markdown'
         addGameVersion "Fabric"
 
