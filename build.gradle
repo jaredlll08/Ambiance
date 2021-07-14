@@ -26,7 +26,7 @@ if (project.hasProperty('secretFile')) {
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
-version = 'fabric-1.17-rc2-6.0.0' + ".${getBuildNumber()}"
+version = 'fabric-1.17.1-6.0.0' + ".${getBuildNumber()}"
 group = 'com.blamejared.ambientenvironment'
 archivesBaseName = 'AmbientEnvironment'
 
@@ -51,7 +51,7 @@ archivesBaseName = 'AmbientEnvironment'
 //}
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.17-rc2"
+    minecraft "com.mojang:minecraft:1.17.12"
     mappings minecraft.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:0.11.3"
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.34.9+1.17"
@@ -100,7 +100,7 @@ publishing {
 curseforge {
 
     apiKey = findProperty('curseforge_api_token') ?: 0
-    def versions = ["1.17", "1.17-Snapshot"]
+    def versions = ["1.17.1", "1.17", "1.17-Snapshot"]
 
     project {
         id = "320163"
